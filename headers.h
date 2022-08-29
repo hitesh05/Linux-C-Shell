@@ -24,7 +24,7 @@ char cwd[2*MAX_SIZE];
 char pseudo_home[1024];
 char prev_dir[1024];
 ptr token[MAX_SIZE];
-char all_commands[3][30];
+char all_commands[4][30];
 
 typedef struct jobs{
     char name[MAX_SIZE];
@@ -32,7 +32,14 @@ typedef struct jobs{
 } job;
 
 void main_loop(void);
+ptr execcommand(ptr command);
+
+// colours
+void yellow();
+void blue();
+void reset();
+
 void pwd();
 void cd(ptr token[], ll ind);
 void echo(ptr token[], ll ind);
-ptr execcommand(ptr command);
+void ls(char dir[], ll ind, ptr token[]);

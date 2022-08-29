@@ -2,6 +2,19 @@
 
 pid_t curr_id;
 
+void yellow()
+{
+    printf("\x1b[1;33m");
+}
+void blue()
+{
+    printf("\x1b[1;34m");
+}
+void reset()
+{
+    printf("\x1b[0m");
+}
+
 void print_prompt()
 {
     char curr_dir[MAX_SIZE], mydir[MAX_SIZE];

@@ -5,6 +5,7 @@ void init_allcmds()
     strcpy(all_commands[0], "pwd");
     strcpy(all_commands[1], "cd");
     strcpy(all_commands[2], "echo");
+    strcpy(all_commands[3], "ls");
 }
 
 ptr *splitcmd(ptr command)
@@ -65,6 +66,10 @@ void execute(ptr cmd)
     else if (!strcmp(all_commands[2], token[0])) // echo
     {
         echo(token, ind);
+    }
+    else if (!strcmp(all_commands[3], token[0])) // ls
+    {
+        ls(cwd, ind, token);
     }
 }
 
