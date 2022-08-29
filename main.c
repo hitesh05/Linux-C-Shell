@@ -7,6 +7,7 @@ void print_prompt()
     char curr_dir[MAX_SIZE], mydir[MAX_SIZE];
     char toprint[MAX_SIZE];
     getcwd(curr_dir, sizeof(curr_dir));
+    // printf("cwd: %s\n", curr_dir);
 
     int check1 = getlogin_r(username, sizeof(username));
     // printf("%d\n%s\n", check1, username);
@@ -23,18 +24,20 @@ void print_prompt()
         perror("some error with finding username");
         return;
     }
-
-    // home/hitesh/Documents/IIIT-H/OSN/assignments/A2/Linux-C-Shell/abc/def
+    
     char delim[2] = "/";
     if (!strcmp(curr_dir, pseudo_home))
     {
-        strcat(mydir, "~");
+        strcpy(mydir, "~");
     }
     else{
         // char test[] = "home/hitesh/Documents/IIIT-H/OSN/assignments/A2/Linux-C-Shell/abc/def";
         char *token;
         char token1[MAX_SIZE];
-        token = strtok(pseudo_home, delim);
+        // printf("pseudo home: %s\n", pseudo_home);
+        char copy[MAX_SIZE];
+        strcpy(copy, pseudo_home);
+        token = strtok(copy, delim);
         while (token != NULL)
         {
             strcpy(token1, token);
@@ -46,12 +49,12 @@ void print_prompt()
             token = strtok(NULL, delim);
         }
         token = strtok(NULL, "");
-        strcat(mydir, "~/");
+        strcpy(mydir, "~/");
         strcat(mydir, token);
     }
     
 
-    strcat(toprint, "<");
+    strcpy(toprint, "<");
     strcat(toprint, username);
     strcat(toprint, "@");
     strcat(toprint, system_name);
@@ -84,7 +87,7 @@ void main_loop(void)
         
         execcommand(command);
 
-        break;
+        // break;
     }
 }
 
@@ -93,9 +96,12 @@ int main(int argc, ptr argv[])
     curr_id = getpid();
     // printf("%d\n", curr_id);
 
+    getcwd(cwd, sizeof(cwd));
     // char curr_dir[MAX_SIZE];
     getcwd(pseudo_home, sizeof(pseudo_home));
+    getcwd(prev_dir, sizeof(prev_dir));
     // printf("%s\n", curr_dir);
+    chdir(cwd);
 
     main_loop();
 

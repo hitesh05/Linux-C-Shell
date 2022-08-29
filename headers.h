@@ -22,6 +22,9 @@ char username[MAX_SIZE];
 char system_name[MAX_SIZE];
 char cwd[2*MAX_SIZE];
 char pseudo_home[1024];
+char prev_dir[1024];
+ptr token[MAX_SIZE];
+char all_commands[3][30];
 
 typedef struct jobs{
     char name[MAX_SIZE];
@@ -30,6 +33,6 @@ typedef struct jobs{
 
 void main_loop(void);
 void pwd();
-void cd(ptr token[], ll k);
-void echo(ptr token[], ll k);
+void cd(ptr token[], ll ind);
+void echo(ptr token[], ll ind);
 ptr execcommand(ptr command);
