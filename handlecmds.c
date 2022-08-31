@@ -40,6 +40,44 @@ ptr *splitcmd(ptr command)
     return cmdarray;
 }
 
+int check_for_background(ptr token[], ll ind)
+{
+    if (!ind)
+    {
+        perror("Invalid argument\n");
+        return -1;
+    }
+
+    int flag = 0;
+    if (ind >= 2)
+    {
+        if (!strcmp(token[ind - 1], "&"))
+        {
+            token[ind - 1] = NULL;
+            ind--;
+            flag = 1;
+        }
+        else if (token[ind - 1][strlen(token[ind - 1]) - 1] == '&')
+        {
+            flag = 1;
+            token[ind - 1][strlen(token[ind - 1]) - 1] = '\0';
+            token[ind] = NULL;
+            ind--;
+        }
+    }
+    else if (ind >= 1)
+    {
+        if (token[ind - 1][strlen(token[ind - 1]) - 1] == '&')
+        {
+            flag = 1;
+            token[ind - 1][strlen(token[ind - 1]) - 1] = '\0';
+            token[ind] = NULL;
+        }
+    }
+
+    return flag;
+}
+
 void execute(ptr cmd)
 {
     char cpy_cmd[1024];
@@ -58,19 +96,8 @@ void execute(ptr cmd)
         token[ind] = strtok(NULL, " \t\r\n");
     }
 
-    if (token[0][0] == '.') // for executables
-    {
-        time_t begin = time(NULL);
+    int check_back = check_for_background(token, ind);
 
-        foreground(token);
-
-        time_t end = time(NULL);
-
-        if ((end - begin) >= 1)
-        {
-            sprintf(foreground_text, "took %lds", (end - begin));
-        }
-    }
     if (!strcmp(all_commands[0], token[0])) // pwd
     {
         pwd();
@@ -91,34 +118,31 @@ void execute(ptr cmd)
     {
         pinfo(token, ind);
     }
-    else if (!strcmp("vi", token[0]) || !strcmp("emacs", token[0]) || !strcmp("gedit", token[0])) // foreground processes
-    {
-        time_t begin = time(NULL);
-
-        foreground(token);
-
-        time_t end = time(NULL);
-        if ((end - begin) >= 1)
-        {
-            sprintf(foreground_text, "took %lds", (end - begin));
-        }
-    }
-    else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0]))
+    else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0])) // exiting the shell
     {
         // write to history
         printf("GOODBYE\n");
         exit(0);
     }
-    else // foreground processes
+    else // foreground and background processes
     {
-        time_t begin = time(NULL);
-
-        foreground(token);
-
-        time_t end = time(NULL);
-        if ((end - begin) >= 1)
+        if (check_back == 0)
         {
-            sprintf(foreground_text, "took %lds", (end - begin));
+            // foreground process
+            time_t begin = time(NULL);
+
+            foreground(token);
+
+            time_t end = time(NULL);
+            if ((end - begin) >= 1)
+            {
+                sprintf(foreground_text, "took %lds", (end - begin));
+            }
+        }
+        else if (check_back > 0)
+        {
+            // background process
+            background(token);
         }
     }
 }

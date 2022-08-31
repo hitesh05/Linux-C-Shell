@@ -1,6 +1,7 @@
 #include "headers.h"
 
 // !!!!!!!!!!!ERROR: correct the color coding!!!!!!!
+// Handle the case "ls -a filename; ls -l filename"
 
 char filepath[MAX_SIZE];
 
