@@ -2,6 +2,7 @@
     "files.associations": {
         "*.rmd": "markdown",
         "fcntl.h": "c",
-        "utsname.h": "c"
+        "utsname.h": "c",
+        "ls.h": "c"
     }
 }

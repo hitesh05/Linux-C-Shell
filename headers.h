@@ -18,13 +18,15 @@ typedef long long int ll;
 typedef char * ptr;
 #define MAX_SIZE 100000
 
+// const int num_commands = 5;
+
 char username[MAX_SIZE];
 char system_name[MAX_SIZE];
 char cwd[2*MAX_SIZE];
 char pseudo_home[1024];
 char prev_dir[1024];
 ptr token[MAX_SIZE];
-char all_commands[4][30];
+char all_commands[5][30];
 
 typedef struct jobs{
     char name[MAX_SIZE];
@@ -43,3 +45,5 @@ void pwd();
 void cd(ptr token[], ll ind);
 void echo(ptr token[], ll ind);
 void ls(char dir[], ll ind, ptr token[]);
+void pinfo(ptr token[], ll ind);
+// void background(char *token[]);

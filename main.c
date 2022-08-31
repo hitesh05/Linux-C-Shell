@@ -17,6 +17,7 @@ void reset()
 
 void print_prompt()
 {
+    // printf("inside print_prompt\n");
     char curr_dir[MAX_SIZE], mydir[MAX_SIZE];
     char toprint[MAX_SIZE];
     getcwd(curr_dir, sizeof(curr_dir));
@@ -37,13 +38,18 @@ void print_prompt()
         perror("some error with finding username");
         return;
     }
-    
+
     char delim[2] = "/";
+
     if (!strcmp(curr_dir, pseudo_home))
     {
         strcpy(mydir, "~");
     }
-    else{
+    else if(strlen(curr_dir) < strlen(pseudo_home)){
+        strcpy(mydir, curr_dir);
+    }
+    else
+    {
         // char test[] = "home/hitesh/Documents/IIIT-H/OSN/assignments/A2/Linux-C-Shell/abc/def";
         char *token;
         char token1[MAX_SIZE];
@@ -65,7 +71,6 @@ void print_prompt()
         strcpy(mydir, "~/");
         strcat(mydir, token);
     }
-    
 
     strcpy(toprint, "<");
     strcat(toprint, username);
@@ -82,8 +87,8 @@ void print_prompt()
 
     printf("\033[1;34m");
 
-	printf("%s ", toprint);
-	printf("\033[0m");
+    printf("%s ", toprint);
+    printf("\033[0m");
 }
 
 void main_loop(void)
@@ -97,7 +102,7 @@ void main_loop(void)
         print_prompt();
 
         getline(&command, &command_size, stdin);
-        
+
         execcommand(command);
 
         // break;
