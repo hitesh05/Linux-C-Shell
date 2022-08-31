@@ -26,12 +26,17 @@ char cwd[2*MAX_SIZE];
 char pseudo_home[1024];
 char prev_dir[1024];
 ptr token[MAX_SIZE];
+char foreground_text[1024];
+
 char all_commands[5][30];
+
 
 typedef struct jobs{
     char name[MAX_SIZE];
     pid_t pid;
 } job;
+
+struct jobs curr_foreground_job;
 
 void main_loop(void);
 ptr execcommand(ptr command);
@@ -41,9 +46,11 @@ void yellow();
 void blue();
 void reset();
 
+// commands
 void pwd();
 void cd(ptr token[], ll ind);
 void echo(ptr token[], ll ind);
 void ls(char dir[], ll ind, ptr token[]);
 void pinfo(ptr token[], ll ind);
+void foreground(ptr token[]);
 // void background(char *token[]);

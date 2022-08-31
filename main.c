@@ -83,6 +83,7 @@ void print_prompt()
     printf("\033[0m");
     strcpy(toprint, "");
     strcat(toprint, mydir);
+    strcat(toprint, foreground_text);
     strcat(toprint, ">");
 
     printf("\033[1;34m");
@@ -97,8 +98,12 @@ void main_loop(void)
     char *command;
     ssize_t command_size = 0;
 
+    foreground_text[0] = '\0';
+
     while (status)
     {
+        curr_foreground_job.pid = -1;
+
         print_prompt();
 
         getline(&command, &command_size, stdin);

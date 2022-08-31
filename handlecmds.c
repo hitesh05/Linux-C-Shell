@@ -50,12 +50,27 @@ void execute(ptr cmd)
     token[0] = strtok(cmd, " \t\r\n");
     ll ind = 0;
 
+    foreground_text[0] = '\0';
+
     while (token[ind] != NULL)
     {
         ind++;
         token[ind] = strtok(NULL, " \t\r\n");
     }
 
+    if (token[0][0] == '.') // for executables
+    {
+        time_t begin = time(NULL);
+
+        foreground(token);
+
+        time_t end = time(NULL);
+
+        if ((end - begin) >= 1)
+        {
+            sprintf(foreground_text, "took %lds", (end - begin));
+        }
+    }
     if (!strcmp(all_commands[0], token[0])) // pwd
     {
         pwd();
@@ -72,9 +87,39 @@ void execute(ptr cmd)
     {
         ls(cwd, ind, token);
     }
-    else if(!strcmp(all_commands[4], token[0])) // pinfo
+    else if (!strcmp(all_commands[4], token[0])) // pinfo
     {
         pinfo(token, ind);
+    }
+    else if (!strcmp("vi", token[0]) || !strcmp("emacs", token[0]) || !strcmp("gedit", token[0])) // foreground processes
+    {
+        time_t begin = time(NULL);
+
+        foreground(token);
+
+        time_t end = time(NULL);
+        if ((end - begin) >= 1)
+        {
+            sprintf(foreground_text, "took %lds", (end - begin));
+        }
+    }
+    else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0]))
+    {
+        // write to history
+        printf("GOODBYE\n");
+        exit(0);
+    }
+    else // foreground processes
+    {
+        time_t begin = time(NULL);
+
+        foreground(token);
+
+        time_t end = time(NULL);
+        if ((end - begin) >= 1)
+        {
+            sprintf(foreground_text, "took %lds", (end - begin));
+        }
     }
 }
 
