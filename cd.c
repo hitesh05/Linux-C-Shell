@@ -49,16 +49,6 @@ void cd(ptr token[], ll ind)
         }
         else
         {
-            // if (!strcmp(token[1], ".."))
-            // {
-            //     char dir2[1024];
-            //     getcwd(dir2, sizeof(dir2));
-            //     if (!strcmp(dir2, pseudo_home))
-            //     {
-            //         printf("%s\n", dir2);
-            //         return;
-            //     }
-            // }
             int flag = chdir(token[1]);
             if (flag < 0)
             {
