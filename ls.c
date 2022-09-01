@@ -4,6 +4,7 @@
 // Handle the case "ls -a filename; ls -l filename"
 
 char filepath[MAX_SIZE];
+char checker[4000];
 
 void print_l(char *filename, char *file)
 {
@@ -95,7 +96,7 @@ void print_l(char *filename, char *file)
     return;
 }
 
-void ls_l(ptr token[], int is_a, int is_dir)
+void ls_l(ptr token[], int is_a, int is_dir, char dir[])
 {
     struct dirent **read_files;
     struct stat st;
@@ -117,7 +118,10 @@ void ls_l(ptr token[], int is_a, int is_dir)
             ll copy = count;
             while (count--)
             {
-                stat(read_files[count]->d_name, &st);
+                strcpy(checker, dir);
+                strcat(checker, "/");
+                strcat(checker, read_files[count]->d_name);
+                stat(checker, &st);
                 total += st.st_blocks;
             }
             total /= 2; // 512 block len
@@ -144,6 +148,9 @@ void ls_l(ptr token[], int is_a, int is_dir)
                 }
                 else
                 {
+                    strcpy(checker, dir);
+                    strcat(checker, "/");
+                    strcat(checker, read_files[count]->d_name);
                     stat(read_files[count]->d_name, &st);
                     total += st.st_blocks;
                 }
@@ -218,7 +225,7 @@ void ls_l(ptr token[], int is_a, int is_dir)
                                 strcpy(filepath, path);
                                 strcat(filepath, "/");
                                 strcat(filepath, read_files[count]->d_name);
-                                stat(read_files[count]->d_name, &st);
+                                stat(filepath, &st);
 
                                 total += st.st_blocks;
                             }
@@ -237,7 +244,7 @@ void ls_l(ptr token[], int is_a, int is_dir)
                                 strcpy(filepath, path);
                                 strcat(filepath, "/");
                                 strcat(filepath, read_files[count]->d_name);
-                                stat(read_files[count]->d_name, &st);
+                                stat(filepath, &st);
                                 print_l(filepath, read_files[count]->d_name);
                                 reset();
                             }
@@ -258,7 +265,7 @@ void ls_l(ptr token[], int is_a, int is_dir)
                             strcpy(filepath, path);
                             strcat(filepath, "/");
                             strcat(filepath, read_files[count]->d_name);
-                            stat(read_files[count]->d_name, &st);
+                            stat(filepath, &st);
 
                             total += st.st_blocks;
                         }
@@ -270,7 +277,7 @@ void ls_l(ptr token[], int is_a, int is_dir)
                             strcpy(filepath, path);
                             strcat(filepath, "/");
                             strcat(filepath, read_files[count]->d_name);
-                            stat(read_files[count]->d_name, &st);
+                            stat(filepath, &st);
                             print_l(filepath, read_files[count]->d_name);
                             free(read_files[count]);
                             reset();
@@ -328,7 +335,7 @@ void ls(char dir[], ll ind, ptr token[])
 
     if (is_l)
     {
-        ls_l(token, is_a, is_dir);
+        ls_l(token, is_a, is_dir, dir);
     }
     else
     {
@@ -346,7 +353,10 @@ void ls(char dir[], ll ind, ptr token[])
                 // -a flag exists
                 while (count--)
                 {
-                    stat(read_files[count]->d_name, &st);
+                    strcpy(checker, dir);
+                    strcat(checker, "/");
+                    strcat(checker, read_files[count]->d_name);
+                    stat(checker, &st);
                     if (S_ISDIR(st.st_mode))
                     {
                         blue();
@@ -373,7 +383,10 @@ void ls(char dir[], ll ind, ptr token[])
                     }
                     else
                     {
-                        stat(read_files[count]->d_name, &st);
+                        strcpy(checker, dir);
+                        strcat(checker, "/");
+                        strcat(checker, read_files[count]->d_name);
+                        stat(checker, &st);
                         if (S_ISDIR(st.st_mode))
                         {
                             blue();
@@ -439,7 +452,7 @@ void ls(char dir[], ll ind, ptr token[])
                                     strcpy(filepath, path);
                                     strcat(filepath, "/");
                                     strcat(filepath, read_files[count]->d_name);
-                                    stat(read_files[count]->d_name, &st);
+                                    stat(filepath, &st);
                                     if (S_ISDIR(st.st_mode))
                                     {
                                         blue();
@@ -465,7 +478,7 @@ void ls(char dir[], ll ind, ptr token[])
                                 strcpy(filepath, path);
                                 strcat(filepath, "/");
                                 strcat(filepath, read_files[count]->d_name);
-                                stat(read_files[count]->d_name, &st);
+                                stat(filepath, &st);
                                 if (S_ISDIR(st.st_mode))
                                 {
                                     blue();

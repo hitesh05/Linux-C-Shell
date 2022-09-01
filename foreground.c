@@ -15,6 +15,7 @@ void foreground(ptr token[])
 
     if (!pid)
     {
+        // child process runs
         int flag = execvp(token[0], token);
         if (!flag)
         {
@@ -25,6 +26,7 @@ void foreground(ptr token[])
     }
     else
     {
+        // wait for child process to run
         int s;
         waitpid(pid, &s, WUNTRACED);
     }

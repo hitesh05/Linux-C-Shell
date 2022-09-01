@@ -1,0 +1,15 @@
+cd test
+history
+cd ..
+quit
+discover -f
+clear
+quit
+discover -f ./test2
+ls test2
+quit
+discover -f
+quit
+ls -l
+ls -l test2
+quit

@@ -30,7 +30,7 @@ char foreground_text[1024];
 ll job_count;
 char hisfile_path[1024]; // path to history.txt file
 
-char all_commands[6][30];
+char all_commands[7][30];
 
 typedef struct jobs
 {
@@ -71,3 +71,5 @@ void init_history();
 void write_history();
 void add_history(ptr token);
 void history(ptr token[], ll ind);
+
+void discover(char dir[], ptr token[], ll ind);
