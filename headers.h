@@ -55,6 +55,9 @@ ptr execcommand(ptr command);
 // colours
 void yellow();
 void blue();
+void red();
+void cyan();
+void green();
 void reset();
 
 // commands

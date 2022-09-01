@@ -21,7 +21,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
             int count = scandir(dir, &read_files, NULL, alphasort);
             if (count < 0)
             {
-                // perror("error: no such file or directory exists\n");
+                // printf("error: no such file or directory exists\n");
                 return;
             }
             while (count--)
@@ -79,7 +79,9 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                         int flag = stat(path, &st);
                         if (flag < 0)
                         {
-                            perror("error: ls\n");
+                            red();
+                            printf("error: ls\n");
+                            reset();
                             return;
                         }
 
@@ -88,7 +90,9 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                             int count = scandir(path, &read_files, NULL, alphasort);
                             if (count < 0)
                             {
-                                perror("Error: no such files or directory\n");
+                                red();
+                                printf("Error: no such files or directory\n");
+                                reset();
                                 return;
                             }
                             while (count--)
@@ -145,7 +149,9 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                 int flag = stat(dir, &st);
                 if (flag < 0)
                 {
-                    perror("error: ls\n");
+                    red();
+                    printf("error: ls\n");
+                    reset();
                     return;
                 }
                 if (S_ISDIR(st.st_mode))
@@ -153,7 +159,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                     int count = scandir(dir, &read_files, NULL, alphasort);
                     if (count < 0)
                     {
-                        // perror("Error: no such files or directory\n");
+                        // printf("Error: no such files or directory\n");
                         return;
                     }
                     while (count--)
@@ -200,7 +206,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
             int count = scandir(dir, &read_files, NULL, alphasort);
             if (count < 0)
             {
-                // perror("error: no such file or directory exists\n");
+                // printf("error: no such file or directory exists\n");
                 return;
             }
             while (count--)
@@ -257,7 +263,9 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                         int flag = stat(path, &st);
                         if (flag < 0)
                         {
-                            perror("error: ls\n");
+                            red();
+                            printf("error: ls\n");
+                            reset();
                             return;
                         }
 
@@ -266,7 +274,9 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                             int count = scandir(path, &read_files, NULL, alphasort);
                             if (count < 0)
                             {
-                                perror("Error: no such files or directory\n");
+                                red();
+                                printf("Error: no such files or directory\n");
+                                reset();
                                 return;
                             }
                             while (count--)
@@ -323,7 +333,9 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                 int flag = stat(dir, &st);
                 if (flag < 0)
                 {
-                    perror("error: ls\n");
+                    red();
+                    printf("error: ls\n");
+                    reset();
                     return;
                 }
                 if (S_ISDIR(st.st_mode))
@@ -331,7 +343,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                     int count = scandir(dir, &read_files, NULL, alphasort);
                     if (count < 0)
                     {
-                        // perror("Error: no such files or directory\n");
+                        // printf("Error: no such files or directory\n");
                         return;
                     }
                     while (count--)
@@ -378,12 +390,14 @@ void discover(char dir[], ptr token[], ll ind)
 
     // if (ind > 2)
     // {
-    //     perror("error: invalid number of arguments.\n");
+    //     printf("error: invalid number of arguments.\n");
     //     return;
     // }
     if (token[0] == NULL)
     {
-        perror("error: invalid command\n");
+        red();
+        printf("error: invalid command\n");
+        reset();
         return;
     }
     else if (ind == 1)
@@ -457,7 +471,9 @@ void discover(char dir[], ptr token[], ll ind)
                     int flag = stat(path, &st);
                     if (flag < 0)
                     {
-                        perror("error: ls\n");
+                        red();
+                        printf("error: ls\n");
+                        reset();
                         return;
                     }
 
@@ -466,7 +482,9 @@ void discover(char dir[], ptr token[], ll ind)
                         int count = scandir(path, &read_files, NULL, alphasort);
                         if (count < 0)
                         {
-                            perror("Error: no such files or directory\n");
+                            red();
+                            printf("Error: no such files or directory\n");
+                            reset();
                             return;
                         }
                         // printf("%d\n", count);
@@ -502,7 +520,7 @@ void discover(char dir[], ptr token[], ll ind)
             int count = scandir(dir, &read_files, NULL, alphasort);
             if (count < 0)
             {
-                perror("error: no such file or directory exists\n");
+                printf("error: no such file or directory exists\n");
                 return;
             }
             while (count--)

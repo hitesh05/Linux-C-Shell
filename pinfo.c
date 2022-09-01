@@ -4,7 +4,9 @@ void pinfo(ptr token[], ll ind)
 {
     if (ind > 2)
     {
-        perror("pinfo: Too many arguments\n");
+        red();
+        printf("pinfo: Too many arguments\n");
+        reset();
         return;
     }
 
@@ -21,7 +23,9 @@ void pinfo(ptr token[], ll ind)
 
     if (pid <= 0)
     {
-        perror("Invalid pid\n");
+        red();
+        printf("Invalid pid\n");
+        reset();
         return;
     }
 
@@ -31,7 +35,9 @@ void pinfo(ptr token[], ll ind)
     FILE *status_file = fopen(proc_stat_file, "r");
     if (!status_file)
     {
-        perror("pinfo: error opening status file");
+        red();
+        printf("pinfo: error opening status file");
+        reset();
         return;
     }
     int x = 0;
@@ -94,7 +100,9 @@ void pinfo(ptr token[], ll ind)
     int flag = readlink(proc_exe_file, read, sizeof(read));
     if (!flag)
     {
-        perror("pinfo: Error opening executable\n");
+        red();
+        printf("pinfo: Error opening executable\n");
+        reset();
         return;
     }
 

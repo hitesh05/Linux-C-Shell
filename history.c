@@ -30,7 +30,9 @@ void init_history()
     int flag = fclose(fp);
     if (flag < 0)
     {
-        perror("Error: init_history\n");
+        red();
+        printf("Error: init_history\n");
+        reset();
     }
     return;
 }
@@ -56,7 +58,9 @@ void write_history()
     FILE *fp = fopen(hisfile_path, "w");
     if (!fp)
     {
-        perror("error opening history.txt\n");
+        red();
+        printf("error opening history.txt\n");
+        reset();
         return;
     }
 
@@ -86,7 +90,9 @@ void write_history()
     int check = fclose(fp);
     if (check < 0)
     {
-        perror("error: unable to write to history\n");
+        red();
+        printf("error: unable to write to history\n");
+        reset();
     }
 
     return;
@@ -96,7 +102,9 @@ void history(ptr token[], ll ind)
 {
     if (ind > 2)
     {
-        perror("error: too many arguments\n");
+        red();
+        printf("error: too many arguments\n");
+        reset();
         return;
     }
 
@@ -105,7 +113,9 @@ void history(ptr token[], ll ind)
         int size = (historyy.num < 10) ? historyy.num : 10;
         if (!size)
         {
-            perror("no history found\n");
+            red();
+            printf("no history found\n");
+            reset();
             return;
         }
 
@@ -132,14 +142,18 @@ void history(ptr token[], ll ind)
 
         if (tot < 0)
         {
-            perror("negative integer not allowed\n");
+            red();
+            printf("negative integer not allowed\n");
+            reset();
             return;
         }
 
         int size = (historyy.num < 20) ? historyy.num : 20;
         if (!size)
         {
-            perror("history is empty\n");
+            red();
+            printf("history is empty\n");
+            reset();
             return;
         }
         if (tot > historyy.num)

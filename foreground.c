@@ -6,7 +6,9 @@ void foreground(ptr token[])
 
     if (pid < 0)
     {
-        perror("fork failed in foreground\n");
+        red();
+        printf("fork failed in foreground\n");
+        reset();
         return;
     }
 
@@ -19,7 +21,9 @@ void foreground(ptr token[])
         int flag = execvp(token[0], token);
         if (!flag)
         {
-            perror("Error: execvp failed\n");
+            red();
+            printf("Error: execvp failed\n");
+            reset();
             return;
         }
         return;

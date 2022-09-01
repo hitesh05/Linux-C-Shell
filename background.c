@@ -7,7 +7,9 @@ void background(ptr token[])
     pid = fork();
     if (pid < 0)
     {
-        perror("error: fork falied in background\n");
+        red();
+        printf("error: fork falied in background\n");
+        reset();
         return;
     }
 
@@ -19,14 +21,18 @@ void background(ptr token[])
         int test = execvp(token[0], token);
         if (!test)
         {
-            perror("error in execvp\n");
+            red();
+            printf("error in execvp\n");
+            reset();
         }
         return;
     }
     else
     {
         job_count++;
+        cyan();
         printf("[%lld] %d %s\n", job_count, pid, token[0]); // DETAILS OF BG PROCESS
+        reset();
         job_arr[job_count].pid = pid;
         strcpy(job_arr[job_count].name, token[0]); // TO KILL PROCESSES
     }

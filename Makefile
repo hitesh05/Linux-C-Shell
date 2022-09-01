@@ -1,2 +1,2 @@
-run: *.c
-	gcc -o run *.c
+shell: *.c
+	gcc -o shell *.c

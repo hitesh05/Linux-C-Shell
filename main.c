@@ -10,6 +10,18 @@ void blue()
 {
     printf("\x1b[1;34m");
 }
+void red()
+{
+    printf("\x1b[1;31m"); 
+}
+void cyan()
+{
+    printf("\x1b[1;36m");
+}
+void green()
+{
+    printf("\x1b[1;32m");
+}
 void reset()
 {
     printf("\x1b[0m");
@@ -29,8 +41,11 @@ void del_process(int id)
             job_count--;
         }
     }
-    if (flag == 0)
+    if (flag == 0){
+        red();
         printf("Error: no such process found\n");
+        reset();
+    }
 
     return;
 }
@@ -44,7 +59,9 @@ void done()
     {
         if (p < 0)
         {
-            perror("\nwaitpid failed\n");
+            red();
+            printf("\nwaitpid failed\n");
+            reset();
         }
         const int exit = WEXITSTATUS(status);
 
@@ -52,12 +69,20 @@ void done()
 
         if (((WIFEXITED(status) && p == job_arr[z].pid)))
         {
-            if (exit == 0)
-                fprintf(stderr, "\nExitted normally with exit status: %d\n", exit);
-            else
-                fprintf(stderr, "\nExitted abnormally\n");
+            if (exit == 0){
+                cyan();
+                printf("\nExitted normally with exit status: %d\n", exit);
+                reset();
+            }
+            else{
+                red();
+                printf("\nExitted abnormally\n");
+                reset();
+            }
 
-            fprintf(stderr, "%s with pid %d: exited\n", job_arr[z].name, p);
+            green();
+            printf("%s with pid %d: exited\n", job_arr[z].name, p);
+            reset();
             print_prompt();
             fflush(stdout);
             del_process(p);

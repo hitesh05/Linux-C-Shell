@@ -12,7 +12,7 @@ void print_prompt()
     // printf("%d\n%s\n", check1, username);
     if (check1 != 0)
     {
-        perror("some error with finding username");
+        printf("some error with finding username");
         return;
     }
 
@@ -20,7 +20,7 @@ void print_prompt()
     // printf("%d\n%s\n", check2, system_name);
     if (check2 != 0)
     {
-        perror("some error with finding username");
+        printf("some error with finding username");
         return;
     }
 

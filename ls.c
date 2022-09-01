@@ -109,7 +109,9 @@ void ls_l(ptr token[], int is_a, int is_dir, char dir[])
         count = scandir(".", &read_files, NULL, alphasort);
         if (count < 0)
         {
-            perror("error: no such file or directory exists\n");
+            red();
+            printf("error: no such file or directory exists\n");
+            reset();
         }
         else if (is_a)
         {
@@ -197,7 +199,9 @@ void ls_l(ptr token[], int is_a, int is_dir, char dir[])
                 int flag = stat(path, &s);
                 if (flag < 0)
                 {
-                    perror("error: ls\n");
+                    red();
+                    printf("error: ls\n");
+                    reset();
                     return;
                 }
 
@@ -206,7 +210,9 @@ void ls_l(ptr token[], int is_a, int is_dir, char dir[])
                     count = scandir(path, &read_files, NULL, alphasort);
                     if (count < 0)
                     {
-                        perror("Error: no such files or directory\n");
+                        red();
+                        printf("Error: no such files or directory\n");
+                        reset();
                     }
                     else if (!is_a)
                     {
@@ -346,7 +352,9 @@ void ls(char dir[], ll ind, ptr token[])
             count = scandir(".", &read_files, NULL, alphasort);
             if (count < 0)
             {
-                perror("error: no such file or directory exists\n");
+                red();
+                printf("error: no such file or directory exists\n");
+                reset();
             }
             else if (is_a)
             {
@@ -370,7 +378,6 @@ void ls(char dir[], ll ind, ptr token[])
                     free(read_files[count]);
                 }
                 free(read_files);
-                reset();
             }
             else
             {
@@ -401,7 +408,6 @@ void ls(char dir[], ll ind, ptr token[])
                     free(read_files[count]);
                 }
                 free(read_files);
-                reset();
             }
         }
         else
@@ -427,7 +433,9 @@ void ls(char dir[], ll ind, ptr token[])
                     int flag = stat(path, &st);
                     if (flag < 0)
                     {
-                        perror("error: ls\n");
+                        red();
+                        printf("error: ls\n");
+                        reset();
                         return;
                     }
 
@@ -436,7 +444,7 @@ void ls(char dir[], ll ind, ptr token[])
                         count = scandir(path, &read_files, NULL, alphasort);
                         if (count < 0)
                         {
-                            perror("Error: no such files or directory\n");
+                            printf("Error: no such files or directory\n");
                         }
                         else if (!is_a)
                         {

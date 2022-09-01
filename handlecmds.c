@@ -17,7 +17,9 @@ ptr *splitcmd(ptr command)
     char **cmdarray = malloc(100 * x);
     if (cmdarray == NULL)
     {
+        red();
         printf("malloc failed in handlecmds\n");
+        reset();
     }
 
     char *cmd = strtok(command, ";\n");
@@ -30,7 +32,9 @@ ptr *splitcmd(ptr command)
             cmdarray = realloc(cmdarray, 100 * x);
             if (cmdarray == NULL)
             {
+                red();
                 printf("realloc failed in handlecmds\n");
+                reset();
             }
         }
 
@@ -46,7 +50,9 @@ int check_for_background(ptr token[], ll ind)
 {
     if (!ind)
     {
-        perror("Invalid argument\n");
+        red();
+        printf("Invalid argument\n");
+        reset();
         return -1;
     }
 
@@ -134,8 +140,10 @@ void execute(ptr cmd)
     {
         // write to history
         write_history();
-
-        printf("GOODBYE\n");
+        printf("\n\n");
+        cyan();
+        printf("GOODBYE\n\n");
+        reset();
         exit(0);
     }
     else // foreground and background processes
