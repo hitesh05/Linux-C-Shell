@@ -172,90 +172,117 @@ void ls_l(ptr token[], int is_a, int is_dir)
         // directory is present in cmd
         for (ll i = 1; token[i] != NULL; i++)
         {
-            if (token[i][0] != '-')
+            if (token[i][0] != '-' || (token[i][0] == '-' && strlen(token[i]) == 1))
             {
                 // token is a directory and not a flag
-                count = scandir(token[i], &read_files, NULL, alphasort);
-                if (count < 0)
+                char path[1030];
+                if (token[i][0] != '\0' && token[i][0] == '~')
                 {
-                    perror("Error: no such files or directory\n");
+                    sprintf(path, "%s/%s", pseudo_home, &token[i][1]);
                 }
-                else if (!is_a)
+                else if (token[i][0] != '\0')
                 {
-                    // no -a flag in cmd
-                    ll total = 0;
-                    ll copy = count;
+                    strcpy(path, token[i]);
+                }
+                // printf("%s\n", path);
 
-                    while (count--)
+                struct stat s;
+                int flag = stat(path, &s);
+                if (flag < 0)
+                {
+                    perror("error: ls\n");
+                    return;
+                }
+
+                if (S_ISDIR(s.st_mode))
+                {
+                    count = scandir(path, &read_files, NULL, alphasort);
+                    if (count < 0)
                     {
-                        if (read_files[count]->d_name[0] == '.')
+                        perror("Error: no such files or directory\n");
+                    }
+                    else if (!is_a)
+                    {
+                        // no -a flag in cmd
+                        ll total = 0;
+                        ll copy = count;
+
+                        while (count--)
                         {
-                            continue;
+                            if (read_files[count]->d_name[0] == '.')
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                strcpy(filepath, path);
+                                strcat(filepath, "/");
+                                strcat(filepath, read_files[count]->d_name);
+                                stat(read_files[count]->d_name, &st);
+
+                                total += st.st_blocks;
+                            }
                         }
-                        else
+                        total /= 2;
+                        printf("Total %lld\n", total);
+                        count = copy;
+                        while (count--)
                         {
-                            strcpy(filepath, token[i]);
+                            if (read_files[count]->d_name[0] == '.')
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                strcpy(filepath, path);
+                                strcat(filepath, "/");
+                                strcat(filepath, read_files[count]->d_name);
+                                stat(read_files[count]->d_name, &st);
+                                print_l(filepath, read_files[count]->d_name);
+                                reset();
+                            }
+                            free(read_files[count]);
+                            reset();
+                        }
+                        free(read_files);
+                        reset();
+                    }
+                    else
+                    {
+                        // -a flag exists
+                        ll total = 0;
+                        ll copy = count;
+
+                        while (count--)
+                        {
+                            strcpy(filepath, path);
                             strcat(filepath, "/");
                             strcat(filepath, read_files[count]->d_name);
                             stat(read_files[count]->d_name, &st);
 
                             total += st.st_blocks;
                         }
-                    }
-                    total /= 2;
-                    printf("Total %lld\n", total);
-                    count = copy;
-                    while (count--)
-                    {
-                        if (read_files[count]->d_name[0] == '.')
+                        total /= 2;
+                        printf("Total %lld\n", total);
+                        count = copy;
+                        while (count--)
                         {
-                            continue;
-                        }
-                        else
-                        {
-                            strcpy(filepath, token[i]);
+                            strcpy(filepath, path);
                             strcat(filepath, "/");
                             strcat(filepath, read_files[count]->d_name);
                             stat(read_files[count]->d_name, &st);
                             print_l(filepath, read_files[count]->d_name);
+                            free(read_files[count]);
                             reset();
                         }
-                        free(read_files[count]);
+                        free(read_files);
                         reset();
                     }
-                    free(read_files);
-                    reset();
                 }
                 else
                 {
-                    // -a flag exists
-                    ll total = 0;
-                    ll copy = count;
-
-                    while (count--)
-                    {
-                        strcpy(filepath, token[i]);
-                        strcat(filepath, "/");
-                        strcat(filepath, read_files[count]->d_name);
-                        stat(read_files[count]->d_name, &st);
-
-                        total += st.st_blocks;
-                    }
-                    total /= 2;
-                    printf("Total %lld\n", total);
-                    count = copy;
-                    while (count--)
-                    {
-                        strcpy(filepath, token[i]);
-                        strcat(filepath, "/");
-                        strcat(filepath, read_files[count]->d_name);
-                        stat(read_files[count]->d_name, &st);
-                        print_l(filepath, read_files[count]->d_name);
-                        free(read_files[count]);
-                        reset();
-                    }
-                    free(read_files);
-                    reset();
+                    // its a file
+                    print_l(path, path);
                 }
             }
         }
@@ -290,6 +317,10 @@ void ls(char dir[], ll ind, ptr token[])
             is_a = 1;
         }
         else if (token[i][0] != '-')
+        {
+            is_dir = 1;
+        }
+        else if (token[i][0] == '-' && strlen(token[i]) == 1)
         {
             is_dir = 1;
         }
@@ -365,26 +396,73 @@ void ls(char dir[], ll ind, ptr token[])
             // directories mentioned alongside ls
             for (ll i = 1; token[i] != NULL; i++)
             {
-                if (token[i][0] != '-')
+                if (token[i][0] != '-' || (token[i][0] == '-' && strlen(token[i]) == 1))
                 {
                     // token is a directory and not a flag
-                    count = scandir(token[i], &read_files, NULL, alphasort);
-                    if (count < 0)
+
+                    char path[1030];
+                    if (token[i][0] != '\0' && token[i][0] == '~')
                     {
-                        perror("Error: no such files or directory\n");
+                        sprintf(path, "%s/%s", pseudo_home, &token[i][1]);
                     }
-                    else if (!is_a)
+                    else if (token[i][0] != '\0')
                     {
-                        // no -a flag in cmd
-                        while (count--)
+                        strcpy(path, token[i]);
+                    }
+
+                    struct stat st;
+                    int flag = stat(path, &st);
+                    if (flag < 0)
+                    {
+                        perror("error: ls\n");
+                        return;
+                    }
+
+                    if (S_ISDIR(st.st_mode))
+                    {
+                        count = scandir(path, &read_files, NULL, alphasort);
+                        if (count < 0)
                         {
-                            if (read_files[count]->d_name[0] == '.')
+                            perror("Error: no such files or directory\n");
+                        }
+                        else if (!is_a)
+                        {
+                            // no -a flag in cmd
+                            while (count--)
                             {
-                                continue;
+                                if (read_files[count]->d_name[0] == '.')
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    strcpy(filepath, path);
+                                    strcat(filepath, "/");
+                                    strcat(filepath, read_files[count]->d_name);
+                                    stat(read_files[count]->d_name, &st);
+                                    if (S_ISDIR(st.st_mode))
+                                    {
+                                        blue();
+                                    }
+                                    else if (st.st_mode & S_IXUSR)
+                                    {
+                                        yellow();
+                                    }
+                                    printf("%s ", read_files[count]->d_name);
+                                    reset();
+                                }
+                                free(read_files[count]);
+                                reset();
                             }
-                            else
+                            free(read_files);
+                            reset();
+                        }
+                        else
+                        {
+                            // -a flag exists
+                            while (count--)
                             {
-                                strcpy(filepath, token[i]);
+                                strcpy(filepath, path);
                                 strcat(filepath, "/");
                                 strcat(filepath, read_files[count]->d_name);
                                 stat(read_files[count]->d_name, &st);
@@ -398,36 +476,16 @@ void ls(char dir[], ll ind, ptr token[])
                                 }
                                 printf("%s ", read_files[count]->d_name);
                                 reset();
+                                free(read_files[count]);
                             }
-                            free(read_files[count]);
+                            free(read_files);
                             reset();
                         }
-                        free(read_files);
-                        reset();
                     }
                     else
                     {
-                        // -a flag exists
-                        while (count--)
-                        {
-                            strcpy(filepath, token[i]);
-                            strcat(filepath, "/");
-                            strcat(filepath, read_files[count]->d_name);
-                            stat(read_files[count]->d_name, &st);
-                            if (S_ISDIR(st.st_mode))
-                            {
-                                blue();
-                            }
-                            else if (st.st_mode & S_IXUSR)
-                            {
-                                yellow();
-                            }
-                            printf("%s ", read_files[count]->d_name);
-                            reset();
-                            free(read_files[count]);
-                        }
-                        free(read_files);
-                        reset();
+                        // its a file
+                        printf("%s\n", path);
                     }
                 }
             }

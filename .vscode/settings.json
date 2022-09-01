@@ -3,6 +3,7 @@
         "*.rmd": "markdown",
         "fcntl.h": "c",
         "utsname.h": "c",
-        "ls.h": "c"
+        "ls.h": "c",
+        "unistd.h": "c"
     }
 }

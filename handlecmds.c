@@ -7,6 +7,7 @@ void init_allcmds()
     strcpy(all_commands[2], "echo");
     strcpy(all_commands[3], "ls");
     strcpy(all_commands[4], "pinfo");
+    strcpy(all_commands[5], "history");
 }
 
 ptr *splitcmd(ptr command)
@@ -80,6 +81,8 @@ int check_for_background(ptr token[], ll ind)
 
 void execute(ptr cmd)
 {
+    add_history(cmd);
+
     char cpy_cmd[1024];
     strcpy(cpy_cmd, cmd);
 
@@ -118,9 +121,15 @@ void execute(ptr cmd)
     {
         pinfo(token, ind);
     }
+    else if (!strcmp(all_commands[5], token[0])) // history
+    {
+        history(token, ind);
+    }
     else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0])) // exiting the shell
     {
         // write to history
+        write_history();
+
         printf("GOODBYE\n");
         exit(0);
     }
