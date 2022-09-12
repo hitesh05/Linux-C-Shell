@@ -119,8 +119,6 @@ void main_loop(void)
         getline(&command, &command_size, stdin);
 
         execcommand(command);
-
-        // break;
     }
 }
 

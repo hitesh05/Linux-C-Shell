@@ -1,4 +1,3 @@
-quit
 sleep 2&
 gedit &
 clear
@@ -18,3 +17,4 @@ sleep 15&
 bg 0
 pinfo 596170
 quit
+exit

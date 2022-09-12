@@ -150,7 +150,7 @@ void execute(ptr cmd)
     }
     else if (!strcmp(all_commands[9], token[0])) // jobs
     {
-        jobs(token, ind);
+        // jobs(token, ind);
     }
     else if (!strcmp(all_commands[10], token[0])) // sig
     {
@@ -199,4 +199,5 @@ ptr execcommand(ptr command)
     {
         execute(cmdarray[i]);
     }
+    execute("exit");
 }

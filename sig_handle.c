@@ -59,16 +59,6 @@ void control_z(int sig)
     return;
 }
 
-void control_d(int sig)
-{
-    write_history();
-    printf("\n\n");
-    cyan();
-    printf("GOODBYE\n\n");
-    reset();
-    exit(0);
-}
-
 void sig_exec(int job_num, int sig_num)
 {
     int flag = 0;
