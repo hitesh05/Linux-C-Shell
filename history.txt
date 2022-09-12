@@ -1,8 +1,20 @@
 clear
-cd djkv vodkf
-ls -l
-ls -l test2
-ls -l test2/test3
+clear
+ls
+clear
+sleep 4&
 quit
-history
+sleep 4&
+quit
+sleep 2&
+gedit &
+clear
+sleep 5&
+fg 0
+sleep 10&
+fg 0
+quit
+sleep 10&
+fg 0
+clear
 quit

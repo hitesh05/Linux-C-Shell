@@ -64,11 +64,13 @@ the shell if no pid given
 
 10) history.c :- contains the add_history(),init_history(),write_history() and history() functions , handles the history command.
 
-11) foreground.c :- contains foreground() which runs the command in foreground. The time taken to execute the process is printed alongside the prompt if it is greater that 1s.
+11) foreground.c :- contains foreground() which runs the command in foreground. The time taken to execute the process is printed alongside the prompt if it is greater that 1s. \
+*Assumption:* time is printed for latest process executed, not all.
 
 12) background.c :- contains background() which runs any process in the background. Prints the status of the process on exiting.
 
 13) discover.c :- contains discover_d() and discover(). works simialar to the find command in bash. \
 -d flag searches for all directories recursively \
 -f flag searches for all files recursively \
-Directory path name may also be provided in the argument.
+Directory path name may also be provided in the argument. \
+*Assumption:* Does not search for hidden files.

@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <sys/types.h> // for pid_t
 #include <sys/wait.h>
+#include <ctype.h>
 
 typedef long long int ll;
 typedef char *ptr;
@@ -27,19 +28,21 @@ char pseudo_home[1024];
 char prev_dir[1024];
 ptr token[MAX_SIZE];
 char foreground_text[1024];
-ll job_count;
 char hisfile_path[1024]; // path to history.txt file
 
-char all_commands[7][30];
+char all_commands[10][30];
+
+pid_t SHELL_PID;
 
 typedef struct jobs
 {
     char name[10000];
     pid_t pid;
 } job;
-
 struct jobs curr_foreground_job;
 struct jobs job_arr[100000];
+
+ll job_count;
 
 struct his
 {
@@ -62,6 +65,8 @@ void reset();
 
 // commands
 void print_prompt();
+void del_process(int id);
+
 void pwd();
 void cd(ptr token[], ll ind);
 void echo(ptr token[], ll ind);
@@ -76,3 +81,8 @@ void add_history(ptr token);
 void history(ptr token[], ll ind);
 
 void discover(char dir[], ptr token[], ll ind);
+void control_c(int sig);
+void control_z(int sig);
+void control_d(int sig);
+
+void fg(ptr token[], ll ind);

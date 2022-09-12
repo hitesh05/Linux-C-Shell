@@ -12,7 +12,7 @@ void blue()
 }
 void red()
 {
-    printf("\x1b[1;31m"); 
+    printf("\x1b[1;31m");
 }
 void cyan()
 {
@@ -30,8 +30,10 @@ void reset()
 void del_process(int id)
 {
     // printf("Entered killproc with job count = %lld and proc number=%d\n", job_count, id);
+    if (id == -1)
+        job_count = 0;
     int flag = 0;
-    for (ll i = 1; i <= job_count; i++)
+    for (ll i = 0; i < job_count; i++)
     {
         if (job_arr[i].pid == id)
         {
@@ -41,7 +43,10 @@ void del_process(int id)
             job_count--;
         }
     }
-    if (flag == 0){
+
+    id = -id;
+    if (flag == 0 && id != 1)
+    {
         red();
         printf("Error: no such process found\n");
         reset();
@@ -55,7 +60,7 @@ void done()
     pid_t p;
     int status;
     p = waitpid(-1, &status, WNOHANG);
-    for (ll z = 1; z <= job_count; z++)
+    for (ll z = 0; z < job_count; z++)
     {
         if (p < 0)
         {
@@ -69,12 +74,14 @@ void done()
 
         if (((WIFEXITED(status) && p == job_arr[z].pid)))
         {
-            if (exit == 0){
+            if (exit == 0)
+            {
                 cyan();
                 printf("\nExitted normally with exit status: %d\n", exit);
                 reset();
             }
-            else{
+            else
+            {
                 red();
                 printf("\nExitted abnormally\n");
                 reset();
@@ -103,6 +110,9 @@ void main_loop(void)
         curr_foreground_job.pid = -1;
 
         signal(SIGCHLD, done);
+        signal(SIGTSTP, control_z);
+        signal(SIGINT, control_c);
+        // add ctrl+d
 
         print_prompt();
 
@@ -116,6 +126,7 @@ void main_loop(void)
 
 int main(int argc, ptr argv[])
 {
+    SHELL_PID = getpid();
     curr_id = getpid();
     // printf("%d\n", curr_id);
 

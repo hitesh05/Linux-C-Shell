@@ -33,7 +33,7 @@ void background(ptr token[])
         cyan();
         printf("[%lld] %d %s\n", job_count, pid, token[0]); // DETAILS OF BG PROCESS
         reset();
-        job_arr[job_count].pid = pid;
-        strcpy(job_arr[job_count].name, token[0]); // TO KILL PROCESSES
+        job_arr[job_count - 1].pid = pid;
+        strcpy(job_arr[job_count - 1].name, token[0]); // TO KILL PROCESSES
     }
 }

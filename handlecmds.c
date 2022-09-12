@@ -9,6 +9,9 @@ void init_allcmds()
     strcpy(all_commands[4], "pinfo");
     strcpy(all_commands[5], "history");
     strcpy(all_commands[6], "discover");
+    strcpy(all_commands[7], "fg");
+    strcpy(all_commands[8], "bg");
+    strcpy(all_commands[9], "jobs");
 }
 
 ptr *splitcmd(ptr command)
@@ -104,7 +107,7 @@ void execute(ptr cmd)
     {
         ind++;
         token[ind] = strtok(NULL, " \t\r\n");
-    }
+    } 
 
     int check_back = check_for_background(token, ind);
 
@@ -135,6 +138,10 @@ void execute(ptr cmd)
     else if (!strcmp(all_commands[6], token[0])) // discover
     {
         discover(cwd, token, ind);
+    }
+    else if (!strcmp(all_commands[7], token[0])) // fg
+    {
+        fg(token, ind);
     }
     else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0])) // exiting the shell
     {

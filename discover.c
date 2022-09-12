@@ -1,6 +1,8 @@
 #include "headers.h"
 
 char filepath[4000];
+char *filename;
+int is_file = 0;
 
 void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
 {
@@ -38,7 +40,18 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                     strcat(checker, read_files[count]->d_name);
                     struct stat st;
                     stat(checker, &st);
-                    printf("%s%s\n", path2, read_files[count]->d_name);
+                    if (is_file)
+                    {
+                        if (!strcmp(read_files[count]->d_name, filename))
+                        {
+                            printf("%s%s\n", path2, read_files[count]->d_name);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        printf("%s%s\n", path2, read_files[count]->d_name);
+                    }
                     if (S_ISDIR(st.st_mode))
                     {
                         char path3[1030];
@@ -57,7 +70,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
             {
                 for (ll i = 1; token[i] != NULL; i++)
                 {
-                    if (token[i][0] != '-' || (token[i][0] == '-' && strlen(token[i]) == 1))
+                    if ((token[i][0] != '-' && token[i][0] != '"') || (token[i][0] == '-' && strlen(token[i]) == 1))
                     {
                         // token is a directory and not a flag
 
@@ -108,7 +121,17 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                                     strcat(filepath, read_files[count]->d_name);
                                     struct stat s;
                                     stat(filepath, &s);
-                                    printf("%s%s\n", path2, read_files[count]->d_name);
+                                    if (is_file)
+                                    {
+                                        if (!strcmp(read_files[count]->d_name, filename))
+                                        {
+                                            printf("%s%s\n", path2, read_files[count]->d_name);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        printf("%s%s\n", path2, read_files[count]->d_name);
+                                    }
                                     if (S_ISDIR(s.st_mode))
                                     {
                                         char path3[2000];
@@ -177,7 +200,17 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                             strcat(checker, read_files[count]->d_name);
                             // printf("%s\n", checker);
                             stat(checker, &s);
-                            printf("%s%s\n", path2, read_files[count]->d_name);
+                            if (is_file)
+                            {
+                                if (!strcmp(read_files[count]->d_name, filename))
+                                {
+                                    printf("%s%s\n", path2, read_files[count]->d_name);
+                                }
+                            }
+                            else
+                            {
+                                printf("%s%s\n", path2, read_files[count]->d_name);
+                            }
                             if (S_ISDIR(s.st_mode))
                             {
                                 char path3[2000];
@@ -241,7 +274,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
             {
                 for (ll i = 1; token[i] != NULL; i++)
                 {
-                    if (token[i][0] != '-' || (token[i][0] == '-' && strlen(token[i]) == 1))
+                    if ((token[i][0] != '-' && token[i][0] != '"') || (token[i][0] == '-' && strlen(token[i]) == 1))
                     {
                         // token is a directory and not a flag
 
@@ -295,8 +328,8 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                                     if (S_ISDIR(s.st_mode))
                                     {
                                         printf("%s%s\n", path2, read_files[count]->d_name);
-                                        char path3[2000];
-                                        sprintf(path3, "%s/%s", path, read_files[count]->d_name);
+                                        char path3[1030];
+                                        sprintf(path3, "%s/%s", dir, read_files[count]->d_name);
                                         discover_d(path3, NULL, is_f, 1, cwd);
                                     }
                                 }
@@ -364,7 +397,7 @@ void discover_d(char dir[], ptr token[], int is_f, int is_dir, char cwd[])
                             if (S_ISDIR(s.st_mode))
                             {
                                 printf("%s%s\n", path2, read_files[count]->d_name);
-                                char path3[2000];
+                                char path3[1030];
                                 sprintf(path3, "%s/%s", dir, read_files[count]->d_name);
                                 discover_d(path3, NULL, is_f, 1, cwd);
                             }
@@ -388,11 +421,6 @@ void discover(char dir[], ptr token[], ll ind)
     struct dirent **read_files;
     struct stat st;
 
-    // if (ind > 2)
-    // {
-    //     printf("error: invalid number of arguments.\n");
-    //     return;
-    // }
     if (token[0] == NULL)
     {
         red();
@@ -422,7 +450,7 @@ void discover(char dir[], ptr token[], ll ind)
                 is_d = 1;
                 is_f = 1;
             }
-            else if (token[i][0] != '-')
+            else if (token[i][0] != '-' && token[i][0] != '"')
             {
                 is_dir = 1;
             }
@@ -431,13 +459,20 @@ void discover(char dir[], ptr token[], ll ind)
                 is_dir = 1;
             }
         }
+
+        if (token[ind - 1][0] == '"')
+        {
+            token[ind - 1][strlen(token[ind - 1]) - 1] = '\0';
+            filename = &token[ind - 1][1];
+            is_file = 1;
+        }
     }
 
-    if(!is_f && !is_d){
+    if (!is_f && !is_d)
+    {
         is_d = 1;
         is_f = 1;
     }
-
 
     if (is_d)
     {
@@ -449,7 +484,7 @@ void discover(char dir[], ptr token[], ll ind)
         {
             for (ll i = 1; token[i] != NULL; i++)
             {
-                if (token[i][0] != '-' || (token[i][0] == '-' && strlen(token[i]) == 1))
+                if ((token[i][0] != '-' && token[i][0] != '"') || (token[i][0] == '-' && strlen(token[i]) == 1))
                 {
                     // token is a directory and not a flag
 
@@ -504,7 +539,17 @@ void discover(char dir[], ptr token[], ll ind)
                                 // printf("%s %d\n", read_files[count]->d_name, S_ISREG(s.st_mode));
                                 if (!S_ISDIR(s.st_mode))
                                 {
-                                    printf("%s%s\n", path2, read_files[count]->d_name);
+                                    if (is_file)
+                                    {
+                                        if (!strcmp(read_files[count]->d_name, filename))
+                                        {
+                                            printf("%s%s\n", path2, read_files[count]->d_name);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        printf("%s%s\n", path2, read_files[count]->d_name);
+                                    }
                                 }
                             }
                             free(read_files[count]);
@@ -539,7 +584,17 @@ void discover(char dir[], ptr token[], ll ind)
                     // printf("%s %d\n", read_files[count]->d_name, S_ISDIR(s.st_mode));
                     if (!S_ISDIR(s.st_mode))
                     {
-                        printf("./%s\n", read_files[count]->d_name);
+                        if (is_file)
+                        {
+                            if (!strcmp(read_files[count]->d_name, filename))
+                            {
+                                printf("./%s\n", read_files[count]->d_name);
+                            }
+                        }
+                        else
+                        {
+                            printf("./%s\n", read_files[count]->d_name);
+                        }
                     }
                 }
                 free(read_files[count]);
