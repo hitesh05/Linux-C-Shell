@@ -30,7 +30,7 @@ ptr token[MAX_SIZE];
 char foreground_text[1024];
 char hisfile_path[1024]; // path to history.txt file
 
-char all_commands[10][30];
+char all_commands[12][30];
 
 pid_t SHELL_PID;
 
@@ -85,4 +85,7 @@ void control_c(int sig);
 void control_z(int sig);
 void control_d(int sig);
 
+void jobs(ptr token[], ll ind);
+void sig(ptr token[], ll ind);
 void fg(ptr token[], ll ind);
+void bg(ptr token[], ll ind);

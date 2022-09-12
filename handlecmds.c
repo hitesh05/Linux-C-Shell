@@ -12,6 +12,7 @@ void init_allcmds()
     strcpy(all_commands[7], "fg");
     strcpy(all_commands[8], "bg");
     strcpy(all_commands[9], "jobs");
+    strcpy(all_commands[10], "sig");
 }
 
 ptr *splitcmd(ptr command)
@@ -142,6 +143,18 @@ void execute(ptr cmd)
     else if (!strcmp(all_commands[7], token[0])) // fg
     {
         fg(token, ind);
+    }
+    else if (!strcmp(all_commands[8], token[0])) // bg
+    {
+        bg(token, ind);
+    }
+    else if (!strcmp(all_commands[9], token[0])) // jobs
+    {
+        jobs(token, ind);
+    }
+    else if (!strcmp(all_commands[10], token[0])) // sig
+    {
+        sig(token, ind);
     }
     else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0])) // exiting the shell
     {

@@ -3,7 +3,7 @@
 int job_num = 0;
 int fd = 0;
 
-void exec()
+void fg_exec()
 {
     int flag = 0;
     for (ll i = 0; i < job_count; i++)
@@ -64,6 +64,6 @@ void fg(ptr token[], ll ind)
         return;
     }
 
-    exec();
+    fg_exec();
     return;
 }

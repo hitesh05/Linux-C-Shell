@@ -68,3 +68,58 @@ void control_d(int sig)
     reset();
     exit(0);
 }
+
+void sig_exec(int job_num, int sig_num)
+{
+    int flag = 0;
+    for (ll i = 0; i < job_count; i++)
+    {
+        if (i == job_num)
+        {
+            flag = 1;
+            printf("sending signal to process %s : %d\n", job_arr[job_num].name, job_arr[job_num].pid);
+
+            int x = kill(job_arr[job_num].pid, sig_num);
+            if (x < 0)
+            {
+                printf("error in sending signal\n");
+                return;
+            }
+            return;
+        }
+    }
+
+    if (flag == 0)
+    {
+        printf("No such process found\n");
+    }
+    return;
+}
+
+void sig(ptr token[], ll ind)
+{
+    if (ind != 3)
+    {
+        printf("Incorrect number of commands\n");
+        return;
+    }
+
+    int job_num, sig_num;
+
+    job_num = atoi(token[1]);
+    if (job_num < 0)
+    {
+        printf("Incorrect job number\n");
+        return;
+    }
+
+    sig_num = atoi(token[1]);
+    if (sig_num < 0)
+    {
+        printf("Incorrect signal number\n");
+        return;
+    }
+
+    sig_exec(job_num, sig_num);
+    return;
+}
