@@ -108,83 +108,100 @@ void execute(ptr cmd)
     {
         ind++;
         token[ind] = strtok(NULL, " \t\r\n");
-    } 
+    }
 
-    int check_back = check_for_background(token, ind);
-
-    if (!strcmp(all_commands[0], token[0])) // pwd
+    int is_pipe = 0;
+    int pipenum = 0;
+    while (token[pipenum] != NULL)
     {
-        pwd();
-    }
-    else if (!strcmp(all_commands[1], token[0])) // cd
-    {
-        cd(token, ind);
-    }
-    else if (!strcmp(all_commands[2], token[0])) // echo
-    {
-        echo(token, ind);
-    }
-    else if (!strcmp(all_commands[3], token[0])) // ls
-    {
-        ls(cwd, ind, token);
-    }
-    else if (!strcmp(all_commands[4], token[0])) // pinfo
-    {
-        pinfo(token, ind);
-    }
-    else if (!strcmp(all_commands[5], token[0])) // history
-    {
-        history(token, ind);
-    }
-    else if (!strcmp(all_commands[6], token[0])) // discover
-    {
-        discover(cwd, token, ind);
-    }
-    else if (!strcmp(all_commands[7], token[0])) // fg
-    {
-        fg(token, ind);
-    }
-    else if (!strcmp(all_commands[8], token[0])) // bg
-    {
-        bg(token, ind);
-    }
-    else if (!strcmp(all_commands[9], token[0])) // jobs
-    {
-        // jobs(token, ind);
-    }
-    else if (!strcmp(all_commands[10], token[0])) // sig
-    {
-        sig(token, ind);
-    }
-    else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0])) // exiting the shell
-    {
-        // write to history
-        write_history();
-        printf("\n\n");
-        cyan();
-        printf("GOODBYE\n\n");
-        reset();
-        exit(0);
-    }
-    else // foreground and background processes
-    {
-        if (check_back == 0)
+        if (strcmp(token[pipenum], ">>") == 0 || strcmp(token[pipenum], "<") == 0 || strcmp(token[pipenum], "|") == 0 || strcmp(token[pipenum], ">") == 0)
         {
-            // foreground process
-            time_t begin = time(NULL);
-
-            foreground(token);
-
-            time_t end = time(NULL);
-            if ((end - begin) >= 1)
-            {
-                sprintf(foreground_text, "took %lds", (end - begin));
-            }
+            // call piper
+            pipe_(cpy_cmd);
+            is_pipe = 1;
+            break;
         }
-        else if (check_back > 0)
+        pipenum++;
+    }
+
+    if (is_pipe == 0)
+    {
+        int check_back = check_for_background(token, ind);
+
+        if (!strcmp(all_commands[0], token[0])) // pwd
         {
-            // background process
-            background(token);
+            pwd();
+        }
+        else if (!strcmp(all_commands[1], token[0])) // cd
+        {
+            cd(token, ind);
+        }
+        else if (!strcmp(all_commands[2], token[0])) // echo
+        {
+            echo(token, ind);
+        }
+        else if (!strcmp(all_commands[3], token[0])) // ls
+        {
+            ls(cwd, ind, token);
+        }
+        else if (!strcmp(all_commands[4], token[0])) // pinfo
+        {
+            pinfo(token, ind);
+        }
+        else if (!strcmp(all_commands[5], token[0])) // history
+        {
+            history(token, ind);
+        }
+        else if (!strcmp(all_commands[6], token[0])) // discover
+        {
+            discover(cwd, token, ind);
+        }
+        else if (!strcmp(all_commands[7], token[0])) // fg
+        {
+            fg(token, ind);
+        }
+        else if (!strcmp(all_commands[8], token[0])) // bg
+        {
+            bg(token, ind);
+        }
+        else if (!strcmp(all_commands[9], token[0])) // jobs
+        {
+            jobs(token, ind);
+        }
+        else if (!strcmp(all_commands[10], token[0])) // sig
+        {
+            sig(token, ind);
+        }
+        else if (!strcmp("exit", token[0]) || !strcmp("quit", token[0])) // exiting the shell
+        {
+            // write to history
+            write_history();
+            printf("\n\n");
+            cyan();
+            printf("GOODBYE\n\n");
+            reset();
+            exit(0);
+        }
+        else // foreground and background processes
+        {
+            if (check_back == 0)
+            {
+                // foreground process
+                time_t begin = time(NULL);
+
+                foreground(token);
+
+                time_t end = time(NULL);
+                if ((end - begin) >= 1)
+                {
+                    sprintf(foreground_text, "took %lds", (end - begin));
+                }
+            }
+            else if (check_back > 0)
+            {
+                // background process
+                background(token);
+            }
         }
     }
 }
@@ -199,5 +216,4 @@ ptr execcommand(ptr command)
     {
         execute(cmdarray[i]);
     }
-    execute("exit");
 }

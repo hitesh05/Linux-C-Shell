@@ -12,7 +12,7 @@ char *get_status(pid_t pid)
         red();
         printf("jobs: error opening status file");
         reset();
-        return;
+        return NULL;
     }
     int x = 0;
     char buffer[500];
@@ -95,13 +95,13 @@ void jobs(ptr token[], ll ind)
 
         if (is_both)
         {
-            printf("[%d] ", i);
+            printf("[%lld] ", i);
 
-            if (!strcmp(status, "R"))
+            if (!strcmp(status, "R") || !strcmp(status, "S"))
             {
                 printf("Running ");
             }
-            else if (!strcmp(status, "S"))
+            else if (!strcmp(status, "T"))
             {
                 printf("Stopped ");
             }
@@ -111,9 +111,9 @@ void jobs(ptr token[], ll ind)
         }
         else if (is_r)
         {
-            if (!strcmp(status, "R"))
+            if (!strcmp(status, "R") || !strcmp(status, "S"))
             {
-                printf("[%d] ", i);
+                printf("[%lld] ", i);
 
                 printf("Running ");
 
@@ -123,9 +123,9 @@ void jobs(ptr token[], ll ind)
         }
         else if (is_s)
         {
-            if (!strcmp(status, "S"))
+            if (!strcmp(status, "T"))
             {
-                printf("[%d] ", i);
+                printf("[%lld] ", i);
 
                 printf("Stopped ");
 

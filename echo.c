@@ -10,6 +10,6 @@ void echo(ptr token[], ll ind)
         strcat(str, space);
     }
 
-    printf("%s", str);
+    printf("%s\n", str);
     return;
 }

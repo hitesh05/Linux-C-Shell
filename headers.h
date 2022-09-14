@@ -54,6 +54,7 @@ struct his historyy;
 
 void main_loop(void);
 ptr execcommand(ptr command);
+void execute(ptr cmd);
 
 // colours
 void yellow();
@@ -66,6 +67,8 @@ void reset();
 // commands
 void print_prompt();
 void del_process(int id);
+
+int check_for_background(ptr token[], ll ind);
 
 void pwd();
 void cd(ptr token[], ll ind);
@@ -89,3 +92,5 @@ void jobs(ptr token[], ll ind);
 void sig(ptr token[], ll ind);
 void fg(ptr token[], ll ind);
 void bg(ptr token[], ll ind);
+
+void pipe_(ptr cmd);

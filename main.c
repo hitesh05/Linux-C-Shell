@@ -120,6 +120,7 @@ void main_loop(void)
 
         execcommand(command);
     }
+    // execute("exit");
 }
 
 int main(int argc, ptr argv[])
