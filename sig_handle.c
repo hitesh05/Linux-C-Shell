@@ -47,6 +47,7 @@ void control_z(int sig)
         strcpy(name, curr_foreground_job.name);
         strcpy(job_arr[job_count].name, name);
         job_count++;
+        job_arr[job_count-1].num = job_count;
         return;
     }
     signal(y, control_z);

@@ -16,11 +16,6 @@ void bg_exec()
                 printf("error in bg\n");
                 return;
             }
-            for (ll j = i; j < job_count; j++)
-            {
-                job_arr[j] = job_arr[j + 1];
-            }
-            job_count--;
         }
     }
 
