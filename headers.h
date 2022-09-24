@@ -14,6 +14,7 @@
 #include <sys/types.h> // for pid_t
 #include <sys/wait.h>
 #include <ctype.h>
+#include <termios.h>
 
 typedef long long int ll;
 typedef char *ptr;
@@ -38,6 +39,7 @@ typedef struct jobs
 {
     char name[10000];
     pid_t pid;
+    ll num;
 } job;
 struct jobs curr_foreground_job;
 struct jobs job_arr[100000];
@@ -94,3 +96,5 @@ void fg(ptr token[], ll ind);
 void bg(ptr token[], ll ind);
 
 void pipe_(ptr cmd);
+
+int autocomplete(ptr token, ptr val);

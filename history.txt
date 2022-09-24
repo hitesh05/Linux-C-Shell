@@ -1,20 +1,20 @@
-cat < cd.c
-ls
-cat < Makefile
-[A[Aq
+gedit main.c &
+jobs
 quit
-cat < headers.h
+sleep 40&
+gedit main.c &
+jobs
 quit
-cat < headers.h
-quit
-cat < headers.h
-quit
-cat < headers.h
-quit
-cat < headers.h
-quit
-cat < headers.h
+sleep 40&
+sleep 1 9
+sleep 40&
+sig 1 9
+jobs
+jobs
 clear
-cat < echo.c | wc -l > out
-cat out
+clear
+quit
+sleep 30&
+sig 1 9
+jobs
 quit

@@ -97,10 +97,35 @@ void done()
     }
 }
 
+void die(const char *s)
+{
+    perror(s);
+    exit(1);
+}
+
+struct termios orig_termios;
+
+void disableRawMode()
+{
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
+        die("tcsetattr");
+}
+
+void enableRawMode()
+{
+    if (tcgetattr(STDIN_FILENO, &orig_termios) == -1)
+        die("tcgetattr");
+    atexit(disableRawMode);
+    struct termios raw = orig_termios;
+    raw.c_lflag &= ~(ICANON | ECHO);
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
+        die("tcsetattr");
+}
+
 void main_loop(void)
 {
     int status = 1;
-    char *command;
+    char *command = malloc(sizeof(char) * 1000);
     ssize_t command_size = 0;
 
     foreground_text[0] = '\0';
@@ -114,13 +139,73 @@ void main_loop(void)
         signal(SIGINT, control_c);
         // add ctrl+d
 
+        setbuf(stdout, NULL);
+        enableRawMode();
+        memset(command, '\0', 1000);
+
         print_prompt();
 
-        getline(&command, &command_size, stdin);
+        char c;
+        int pt = 0;
+        int is_tab = 0;
+
+        while (read(STDIN_FILENO, &c, 1) == 1)
+        {
+            if (iscntrl(c))
+            {
+                if (c == EOF || c == 4)
+                {
+                    exit(0);
+                }
+                else if (c == 10)
+                {
+                    // END OF LINE
+                    printf("%c", c);
+                    command[pt++] = c;
+                    break;
+                }
+                else if (c == 9)
+                {
+                    // TAB
+                    char *cmd = malloc(sizeof(char) * MAX_SIZE);
+                    memset(cmd, '\0', MAX_SIZE);
+                    int autocomp = autocomplete(command, cmd);
+                    strcpy(command, cmd);
+                    pt = strlen(command);
+                    // printf("Command is:%d\n",pt);
+                    is_tab = 1;
+                }
+                else if (c == 127)
+                {
+                    // BACKSPACE
+                    if (pt > 0)
+                    {
+                        if (command[pt - 1] == 9)
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                printf("\b");
+                            }
+                        }
+                        command[--pt] = '\0';
+                        printf("\b \b");
+                    }
+                }
+            }
+            else
+            {
+                command[pt++] = c;
+                printf("%c", c);
+            }
+        }
+        disableRawMode();
+
+        command[pt] = '\0';
+
+        // getline(&command, &command_size, stdin);
 
         execcommand(command);
     }
-    // execute("exit");
 }
 
 int main(int argc, ptr argv[])

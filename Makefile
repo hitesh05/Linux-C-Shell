@@ -1,2 +1,2 @@
-make: 
-	gcc -g  *.c
+shell: *.c
+	gcc -o shell *.c

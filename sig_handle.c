@@ -64,17 +64,22 @@ void sig_exec(int job_num, int sig_num)
     int flag = 0;
     for (ll i = 0; i < job_count; i++)
     {
-        if (i == job_num)
+        if (job_arr[i].num == job_num)
         {
             flag = 1;
-            printf("sending signal to process %s : %d\n", job_arr[job_num].name, job_arr[job_num].pid);
+            printf("sending signal to process %s : %d\n", job_arr[job_num - 1].name, job_arr[job_num - 1].pid);
 
-            int x = kill(job_arr[job_num].pid, sig_num);
+            int x = kill(job_arr[job_num - 1].pid, sig_num);
             if (x < 0)
             {
                 printf("error in sending signal\n");
                 return;
             }
+            for (ll j = i; j < job_count; j++)
+            {
+                job_arr[j] = job_arr[j + 1];
+            }
+            job_count--;
             return;
         }
     }

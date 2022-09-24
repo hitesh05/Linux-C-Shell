@@ -1,6 +1,35 @@
 #include "headers.h"
 
-// SORTING LEFT
+int compare(const void *p1, const void *p2)
+{
+    const struct jobs *elem1 = p1;
+    const struct jobs *elem2 = p2;
+    if (strcmp(elem1->name, elem2->name) == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        int x = strlen(elem1->name), retval = -1;
+        if (strlen(elem2->name) < x)
+        {
+            x = strlen(elem2->name);
+            retval = 1;
+        }
+        for (int i = 0; i < x; i++)
+        {
+            if (elem1->name[i] > elem2->name[i])
+            {
+                return 1;
+            }
+            else if (elem1->name[i] < elem2->name[i])
+            {
+                return -1;
+            }
+        }
+        return retval;
+    }
+}
 
 char *get_status(pid_t pid)
 {
@@ -83,7 +112,8 @@ void jobs(ptr token[], ll ind)
     {
         is_both = 1;
     }
-
+    struct jobs whyisthis;
+    qsort(job_arr, job_count, sizeof(whyisthis), compare);
     for (ll i = 0; i < job_count; i++)
     {
         char *status = get_status(job_arr[i].pid);
@@ -95,7 +125,7 @@ void jobs(ptr token[], ll ind)
 
         if (is_both)
         {
-            printf("[%lld] ", i);
+            printf("[%lld] ", job_arr[i].num);
 
             if (!strcmp(status, "R") || !strcmp(status, "S"))
             {
@@ -113,7 +143,7 @@ void jobs(ptr token[], ll ind)
         {
             if (!strcmp(status, "R") || !strcmp(status, "S"))
             {
-                printf("[%lld] ", i);
+                printf("[%lld] ", job_arr[i].num);
 
                 printf("Running ");
 
@@ -125,7 +155,7 @@ void jobs(ptr token[], ll ind)
         {
             if (!strcmp(status, "T"))
             {
-                printf("[%lld] ", i);
+                printf("[%lld] ", job_arr[i].num);
 
                 printf("Stopped ");
 
