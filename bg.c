@@ -7,7 +7,7 @@ void bg_exec()
     int flag = 0;
     for (ll i = 0; i < job_count; i++)
     {
-        if (i == job_num)
+        if (job_arr[i].num == job_num)
         {
             flag = 1;
             int x = kill(job_arr[job_num].pid, SIGCONT);
@@ -16,6 +16,11 @@ void bg_exec()
                 printf("error in bg\n");
                 return;
             }
+            for (ll j = i; j < job_count; j++)
+            {
+                job_arr[j] = job_arr[j + 1];
+            }
+            job_count--;
         }
     }
 

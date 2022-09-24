@@ -42,11 +42,11 @@ void control_z(int sig)
     {
         kill(curr_foreground_job.pid, x);
         kill(curr_foreground_job.pid, y);
-        job_count++;
         job_arr[job_count].pid = curr_foreground_job.pid;
         char name[10000];
         strcpy(name, curr_foreground_job.name);
         strcpy(job_arr[job_count].name, name);
+        job_count++;
         return;
     }
     signal(y, control_z);
